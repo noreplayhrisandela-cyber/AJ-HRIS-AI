@@ -12,8 +12,6 @@ app.use(express.static(__dirname));
 // Import API Handlers
 const cronCheckKontrak = require('./api/cron-check-kontrak.js');
 const sendPush = require('./api/send-push.js');
-const syncAbsen = require('./api/sync-absen.js');
-const syncSalesTrack = require('./api/sync-sales-track.js');
 
 // Map the API paths to the handlers
 app.all('/api/cron-check-kontrak', async (req, res, next) => {
@@ -34,26 +32,8 @@ app.all('/api/send-push', async (req, res, next) => {
   }
 });
 
-app.all('/api/sync-absen', async (req, res, next) => {
-  try {
-    await syncAbsen(req, res);
-  } catch (error) {
-    console.error("Error in sync-absen:", error);
-    next(error);
-  }
-});
-
-app.all('/api/sync-sales-track', async (req, res, next) => {
-  try {
-    await syncSalesTrack(req, res);
-  } catch (error) {
-    console.error("Error in sync-sales-track:", error);
-    next(error);
-  }
-});
-
 // For all other routes, serve index.html (SPA Fallback)
-app.use((req, res) => {
+app.get('*all', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
